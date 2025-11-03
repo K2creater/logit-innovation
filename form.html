@@ -1,0 +1,135 @@
+<!-- 
+Workflow:
+User fills form → HTML form submits → Getform receives submission → Zapier triggers → Email + Google Sheets updated automatically
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>logit  Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+  }
+  input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: 3s;
+  }
+  input:hover{
+    border-color: #937f0c;
+    transition: 3s;
+  }
+  input:hover::after{
+    border-color: #937f0c;
+    transition: 3s;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #45a049;
+  }
+  .success {
+    color: green;
+    margin-top: 1rem;
+    display: none;
+    font-weight: bold;
+    animation: fadeIn 1s ease forwards;
+  }
+  @keyframes fadeIn {
+    0% {opacity: 0; transform: translateY(-10px);}
+    100% {opacity: 1; transform: translateY(0);}
+  }
+</style>
+</head>
+<body>
+
+<form id="contactForm" action="https://getform.io/f/bvrmjlgb" method="POST">
+  <h2>Your Details</h2>
+  
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="id">ID</label>
+  <input type="text" id="id" name="id" required>
+
+  <!-- Hidden field for tracking (Zapier-ready) -->
+  <input type="hidden" name="source" value="Website Contact Form">
+
+  <button type="submit">Submit</button>
+  <p class="success" id="successMessage">Thank you! Your form has been submitted.</p>
+</form>
+
+<script>
+  /* 
+  Workflow:
+  User fills form → HTML form submits → Getform receives submission → Zapier triggers → Email + Google Sheets updated automatically
+  */
+
+  const form = document.getElementById('contactForm');
+  const successMessage = document.getElementById('successMessage');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(response => {
+      if (response.ok) {
+        successMessage.style.display = 'block';
+        form.reset();
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+        }, 5000); // hide message after 5 seconds
+      } else {
+        alert('Oops! There was a problem submitting your form.');
+      }
+    })
+    .catch(error => alert('Oops! There was a problem submitting your form.'));
+  });
+</script>
+
+</body>
+</html>
